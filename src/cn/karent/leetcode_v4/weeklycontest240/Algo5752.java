@@ -32,14 +32,14 @@ public class Algo5752 {
             }
             st.push(i);
         }
-        int[] prevSum = new int[n+1];
+        long[] prevSum = new long[n+1];
         for (int i = 1; i <= n; i++) {
             prevSum[i] += prevSum[i-1] + nums[i-1];
         }
         for (int i = 0; i < n; i++) {
             int l = left[i];
             int r = right[i];
-            int sum = prevSum[r] - prevSum[l+1];
+            long sum = prevSum[r] - prevSum[l+1];
             ret = Math.max(ret, sum * nums[i]);
         }
         return ((int) (ret % MOD));
