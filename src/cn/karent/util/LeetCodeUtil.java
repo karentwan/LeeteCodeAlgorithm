@@ -142,5 +142,11 @@ public class LeetCodeUtil {
         postorderTraverse(root.right);
         System.out.print(root.val + " ");
     }
-    
+
+    public static void run(TestCase tc, int[]... arrs) {
+        for (int[] arr : arrs) {
+            tc.test(arr);
+        }
+    }
+
 }
