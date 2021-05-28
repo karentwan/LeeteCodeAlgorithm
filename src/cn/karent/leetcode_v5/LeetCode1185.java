@@ -20,6 +20,7 @@ public class LeetCode1185 {
                 && month <= 2)
             cnt--;
         year -= 1971;  // 与1971相差多少年
+        // year 是多少年, (year-1)/4 闰年的个数(要多一天)
         cnt += year + (year - 1)/4 + 1 - year / 129;
         if( year == 0) cnt--;
         return week[cnt % 7];
