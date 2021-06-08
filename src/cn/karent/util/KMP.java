@@ -2,11 +2,11 @@ package cn.karent.util;
 
 import java.util.*;
 
-/**
+/****************************************************
  * kmp 快速匹配算法
  * @author wan
  * @date 2021.04.07
- */
+ ***************************************************/
 public class KMP {
 
     private char[] data;
@@ -15,11 +15,8 @@ public class KMP {
 
     private int n = 0;
 
-    /**
-     * 生成next数组
-     */
     private void generate() {
-        int i = -1, j = 0;
+        int i = 0, j = 1;
         next[0] = -1;
         while (j < n-1) {
             if( i == -1 || data[i] == data[j]) {
@@ -52,7 +49,7 @@ public class KMP {
 
     public static void main(String[] args) {
         String s = "abaaabc";
-        KMP kmp = new KMP("abc");
+        KMP kmp = new KMP("aaa");
         int ret = kmp.match(s);
         System.out.println(ret);
     }
