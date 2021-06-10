@@ -38,7 +38,7 @@ public class LeetCode518 {
         dp[0] = 1;
         for (int i = 1; i <= n; i++) {
             int coin = coins[i-1];
-            for (int j = 0; j <= amount; j++) {
+            for (int j = coin; j <= amount; j++) {
                 if( j >= coin)
                     dp[j] += dp[j - coin];
             }
