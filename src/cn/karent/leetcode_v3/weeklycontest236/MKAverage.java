@@ -9,14 +9,25 @@ import java.util.*;
  */
 public class MKAverage {
 
-    class OrderTree<T> {
+    static class OrderTree<T> {
+        private TreeMap<T, Integer> data;
+        private int _size;
 
-        private TreeMap<T, Integer> map = new TreeMap<>();
+        public OrderTree() {
+            data = new TreeMap<>();
+            _size = 0;
+        }
 
-        private int _size = 0;
+        public boolean isEmpty() {
+            return data.isEmpty();
+        }
 
-        public void add(T key) {
-            map.put(key, map.getOrDefault(key, 0)+1);
+        public void add(T x) {
+            int v = 0;
+            if (data.containsKey(x)) {
+                v = data.get(x);
+            }
+            data.put(x, v+1);
             _size++;
         }
 
@@ -24,166 +35,121 @@ public class MKAverage {
             return _size;
         }
 
-        public void remove(T key) {
-            _size--;
-//            map.put(key, map.get(key)-1);
-//            if( map.get(key) == 0) {
-//                map.remove(key);
-//            }
-            int cnt = map.getOrDefault(key, 0);
-            if( cnt == 0) {
-                System.out.println("key cnt = 0:" + key);
-            }
-            if( cnt == 1) {
-                map.remove(key);
-            } else {
-                map.put(key, cnt-1);
+        public void remove(T x) {
+            if( data.containsKey(x) ) {
+                int v = data.get(x);
+                if(v == 1) data.remove(x);
+                else data.put(x, v-1);
+                _size--;
             }
         }
 
-        public boolean contains(T o) {
-            return map.containsKey(o);
+        public boolean contains(T x) {
+            return data.containsKey(x);
         }
 
-        public T pollFirst() {
-            T e = first();
-            remove(e);
-            return e;
+        public T ceiling(T x) {
+            return data.ceilingKey(x);
         }
 
-        public T pollLast() {
-            T e = last();
-            remove(e);
-            return e;
-        }
-
-        public T first() {
-            return map.firstKey();
+        public T floor(T x) {
+            return data.floorKey(x);
         }
 
         public T last() {
-            return map.lastKey();
+            return data.lastKey();
         }
 
-        public boolean isEmpty() {
-            return map.isEmpty();
-        }
-
-        public void traverse() {
-            for (T e : map.keySet()) {
-                int value = map.get(e);
-                if( value == 2) {
-                    System.out.print(e + " ");
-                }
-//                System.out.print( value + " ");
-            }
-        }
-
-        public int sum() {
-            int ret = 0;
-            for(T e : map.keySet()) {
-                ret += (Integer)e;
-            }
-            return ret;
+        public T first() {
+            return data.firstKey();
         }
 
     }
-
-    private OrderTree<Integer> left = new OrderTree<>();
-    private OrderTree<Integer> middle = new OrderTree<>();
-    private OrderTree<Integer> right = new OrderTree<>();
-    private Deque<Integer> que = new LinkedList<>();
 
     private int m;
     private int k;
 
     private long sum = 0;
 
-    private int cnt = 0;
+    private OrderTree<Integer> left = new OrderTree<>();
+    private OrderTree<Integer> middle = new OrderTree<>();
+    private OrderTree<Integer> right = new OrderTree<>();
+
+    private LinkedList<Integer> que = new LinkedList<>();
 
     public MKAverage(int m, int k) {
         this.m = m;
         this.k = k;
     }
 
-    private int shiftLeft(OrderTree<Integer> left, OrderTree<Integer> right) {
-        int e = right.pollFirst();
-        left.add(e);
-        return e;
+    private int left2right(OrderTree<Integer> left, OrderTree<Integer> right) {
+        int key = left.last();
+        left.remove(key);
+        right.add(key);
+        return key;
     }
 
-    private int shiftRight(OrderTree<Integer> left, OrderTree<Integer> right) {
-        int e = left.pollLast();
-        right.add(e);
-        return e;
+    private int right2left(OrderTree<Integer> right, OrderTree<Integer> left) {
+        int key = right.first();
+        right.remove(key);
+        left.add(key);
+        return key;
     }
 
     public void addElement(int num) {
+        // 开始添加
         que.offer(num);
-        cnt++;
-        if ( left.isEmpty() || left.first() >= num) {
-            left.add(num);
-        } else if( right.isEmpty() || right.last() <= num) {
-            right.add(num);
-        } else {
+        if( !left.isEmpty() && left.last() > num) left.add(num);
+        else if( !right.isEmpty() && right.first() < num) right.add(num);
+        else {
             middle.add(num);
             sum += num;
         }
-        // 保证元素的个数
+        // 如果左右两边超过了k个元素则往中间移动
         while (left.size() > k) {
-            int e = shiftRight(left, middle);
-            sum += e;
+            int key = left2right(left, middle);
+            sum += key;
         }
         while (right.size() > k) {
-            int e = shiftLeft(middle, right);
-            sum += e;
+            int key = right2left(right, middle);
+            sum += key;
         }
-        if( que.size() > m) {
-            int e = que.pollFirst();
-            if( left.contains(e) ) {
-                left.remove(e);
-            } else if( middle.contains(e)) {
-                middle.remove(e);
-                sum -= e;
-            } else {
-                right.remove(e);
+        // 如果元素数量超过了m个, 将前面的元素删掉
+        while (que.size() > m) {
+            int key = que.poll();
+            if( left.contains(key)) left.remove(key);
+            else if( right.contains(key)) right.remove(key);
+            else {
+                middle.remove(key);
+                sum -= key;
             }
         }
-        // 调整
         if( que.size() >= m) {
+            // 删除后再判断left和right是否满足k个元素
             while (left.size() < k) {
-                int e = shiftLeft(left, middle);
-                sum -= e;
+                int key = right2left(middle, left);
+                sum -= key;
             }
             while (right.size() < k) {
-                int e = shiftRight(middle, right);
-                sum -= e;
+                int key = left2right(middle, right);
+                sum -= key;
             }
         }
     }
 
     public int calculateMKAverage() {
-        if( cnt < m) {
-            return -1;
-        }
-        ////////////////////
-//        int _s = left.map.size();
-//        if( _s == 99) {
-//            left.traverse();
-//            System.out.println(left.map.get(5299));
-//        }
-//        System.out.println(middle.sum() + "\tsum:" + sum);
-        ///////////
-        double ret = sum * 1.0 / (m - 2 * k);
-        return ((int) ret);
+        if( que.size() < m) return -1;
+        return ((int) (sum / (m - 2 * k)));
     }
+
 
     public static void main(String[] args) {
 //        test1();
-//        test2();
-        test3();
+        test2();
+//        test3();
 //        System.out.println(ts.pollFirst());
 //        System.out.println(ts.pollLast());
+
     }
 
     private static void test3() {
