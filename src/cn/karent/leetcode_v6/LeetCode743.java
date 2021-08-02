@@ -20,7 +20,7 @@ public class LeetCode743 {
         return idx;
     }
 
-    public int networkDelayTime(int[][] times, int n, int k) {
+    public int networkDelayTime1(int[][] times, int n, int k) {
         int[][] edges = new int[n+1][n+1];
         for(int i = 0; i <= n; i++) {
             Arrays.fill(edges[i], Integer.MAX_VALUE);
@@ -50,6 +50,47 @@ public class LeetCode743 {
             }
         }
         return cnt == n ? ret : -1;
+    }
+
+
+    // 使用堆找最小元素
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int[][] edges = new int[n+1][n+1];
+        for(int i = 0; i <= n; i++) {
+            Arrays.fill(edges[i], Integer.MAX_VALUE);
+        }
+        int[] dis = new int[n+1];
+        boolean[] vis = new boolean[n+1];
+        PriorityQueue<int[]> que = new PriorityQueue<>((k1, k2) -> k1[1] - k2[1]);
+        Arrays.fill(dis, Integer.MAX_VALUE);
+        for(int[] time : times) {
+            edges[time[0]][time[1]] = time[2];
+            if( time[0] == k) {
+                dis[time[1]] = time[2];
+                que.offer(new int[]{time[1], time[2]});
+            }
+        }
+        vis[k] = true;
+        int cnt = 1;
+        dis[k] = 0;
+        while ( !que.isEmpty() ) {
+            int[] tmp = que.poll();
+            int e = tmp[0];
+            int d = tmp[1];
+            vis[e] = true;
+//            cnt++;
+            for (int i = 1; i <= n; i++) {
+                if( !vis[i] && edges[e][i] != Integer.MAX_VALUE && edges[e][i] + d < dis[i]) {
+                    dis[i] = edges[e][i] + d;
+                    que.offer(new int[]{i, dis[i]});
+                }
+            }
+        }
+        int max = Integer.MIN_VALUE;
+        for (int i = 1; i <= n; i++) {
+            max = Math.max(max, dis[i]);
+        }
+        return max != Integer.MAX_VALUE ? max : -1;
     }
 
     public static void main(String[] args) {
