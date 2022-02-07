@@ -1,7 +1,5 @@
 package cn.karent.leetcode_v6;
 
-import cn.karent.util.LeetCodeUtil;
-
 import java.util.*;
 
 /*******************************************
