@@ -6,7 +6,7 @@ package cn.karent.leetcode_v6;
  * @description: 1比特与2比特字符
  *******************************************/
 public class LeetCode717 {
-
+/*
     private boolean dfs(int[] bits, int idx) {
         if (idx == bits.length-1) {
             return true;
@@ -19,6 +19,17 @@ public class LeetCode717 {
 
     public boolean isOneBitCharacter(int[] bits) {
         return dfs(bits, 0);
+    }
+   */
+
+
+    public boolean isOneBitCharacter(int[] bits) {
+        for (int i = 0; i < bits.length; ) {
+            if (i == bits.length-1) return true;
+            if (bits[i] == 1) i+=2;
+            else i++;
+        }
+        return false;
     }
 
     public static void main(String[] args) {
