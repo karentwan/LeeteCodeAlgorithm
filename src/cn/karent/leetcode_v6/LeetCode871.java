@@ -22,7 +22,7 @@ public class LeetCode871 {
         tmp[n+1][1] = 0;
         final int INF = Integer.MIN_VALUE / 2;
         // dp(i, j)表示从出发点到第i个加油站中间经停j次所剩余的最大加油量
-        // 状态转移方程为: dp(i, j) = max_i
+        // 状态转移方程为: dp[i, j] = max_{j-1 \le k < i}(dp[k, j-1] + tmp[k][0] - tmp[i][0]) + tmp[i][1]
         int[][] dp = new int[n+2][n+2];
         // 第一列
         for (int i = 1; i < n + 2; i++) {
@@ -47,7 +47,6 @@ public class LeetCode871 {
         }
         return -1;
     }
-
 
     public static void main(String[] args) {
         LeetCode871 lc = new LeetCode871();
