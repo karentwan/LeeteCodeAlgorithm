@@ -30,6 +30,13 @@ public class LeetCodeUtil {
         System.out.println();
     }
 
+    public static void print(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+    }
+
     public static <T> List<T> arr2list(T[] arr) {
         List<T> rets = new ArrayList<>();
         for(T item : arr) {
