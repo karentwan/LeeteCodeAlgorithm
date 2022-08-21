@@ -37,6 +37,13 @@ public class LeetCodeUtil {
         System.out.println();
     }
 
+    public static void print(long[] arr) {
+        for (long l : arr) {
+            System.out.print(l + " ");
+        }
+        System.out.println();
+    }
+
     public static <T> List<T> arr2list(T[] arr) {
         List<T> rets = new ArrayList<>();
         for(T item : arr) {
