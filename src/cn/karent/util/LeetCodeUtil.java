@@ -25,7 +25,7 @@ public class LeetCodeUtil {
 
     public static <T> void print(List<T> list) {
         for(T t : list) {
-            System.out.println(t + " ");
+            System.out.print(t + " ");
         }
         System.out.println();
     }
