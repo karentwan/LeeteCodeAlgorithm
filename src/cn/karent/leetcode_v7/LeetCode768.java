@@ -40,7 +40,7 @@ public class LeetCode768 {
         return ret;
     }
 
-    public int maxChunksToSorted(int[] arr) {
+    public int maxChunksToSorted6(int[] arr) {
         Deque<Integer> st = new ArrayDeque<>();
         for (int item : arr) {
             if (st.isEmpty() || item >= st.peekLast()) {
@@ -97,6 +97,22 @@ public class LeetCode768 {
             }
         }
         return Math.max(ret, 1);
+    }
+
+    public int maxChunksToSorted(int[] arr) {
+        Deque<Integer> st = new ArrayDeque<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (st.isEmpty() || arr[i] >= arr[st.peekLast()]) {
+                st.offerLast(i);
+            } else {
+                int idx = st.pollLast();
+                while (!st.isEmpty() && arr[i] < arr[st.peekLast()]) {
+                    st.pollLast();
+                }
+                st.offerLast(idx);
+            }
+        }
+        return st.size();
     }
 
     public static void main(String[] args) {
