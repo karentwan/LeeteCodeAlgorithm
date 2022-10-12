@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
 public class LeetCode817 {
 
     public int numComponents(ListNode head, int[] nums) {
-        Set<Integer> set = new HashSet<>();
-        for (int num : nums) {
-            set.add(num);
-        }
+//        Set<Integer> set = new HashSet<>();
+//        for (int num : nums) {
+//            set.add(num);
+//        }
+        Set<Integer> set = Arrays.stream(nums).boxed().collect(Collectors.toSet());
         int cnt = 0, ret = 0;
         ListNode p = head;
         while (p != null) {
