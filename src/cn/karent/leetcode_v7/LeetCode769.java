@@ -10,12 +10,11 @@ import java.util.*;
 public class LeetCode769 {
 
     public int maxChunksToSorted(int[] arr) {
-        int max = Integer.MIN_VALUE, ret = 0;
+        int max = Integer.MIN_VALUE;
+        int ret = 0;
         for (int i = 0; i < arr.length; i++) {
             max = Math.max(max, arr[i]);
-            if ( max == arr[i]) {
-                ret++;
-            }
+            if (max == i) ret++;
         }
         return ret;
     }
